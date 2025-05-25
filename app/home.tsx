@@ -11,11 +11,8 @@ import {
 } from "react-native";
 import className from "twrnc";
 import axios from "axios";
-
-// Assuming these are your imported icons
-import PersonIcon from "@/assets/PersonIcon";
-import BellIcon from "@/assets/BellIcon";
-import SearchIcon from "@/assets/SearchIcon";
+// Replace the custom icon imports with @expo/vector-icons
+import { Ionicons } from '@expo/vector-icons';
 
 const API_BASE = "https://www.themealdb.com/api/json/v1/1";
 
@@ -66,13 +63,13 @@ const Home: React.FC = () => {
     <View style={className`flex-1`}>
       {/* Header */}
       <View style={className`p-5 flex-row items-center justify-between`}>
-        <PersonIcon />
-        <BellIcon />
+        <Ionicons name="person-outline" size={24} color="black" />
+        <Ionicons name="notifications-outline" size={24} color="black" />
       </View>
 
       {/* Texts */}
       <View style={className`p-5 pt-0`}>
-        <Text style={className`text-semibold text-lg`}>Salam 3liqom</Text>
+        <Text style={className`text-semibold text-lg`}>Welcome</Text>
         <Text style={className`text-bold text-3xl`}>
           Make your own food ^ stay at{" "}
           <Text style={className`text-orange-500`}>home</Text>
@@ -87,7 +84,7 @@ const Home: React.FC = () => {
           placeholder="Search any recipe"
           style={className`flex-1 text-lg font-semibold text-gray-500 p-3 rounded-l-full`}
         />
-        <SearchIcon />
+        <Ionicons name="search-outline" size={24} color="gray" />
       </View>
 
       {/* Categories Section */}
@@ -114,7 +111,7 @@ const Home: React.FC = () => {
       </View>
 
       {/* Recipes Section */}
-      <ScrollView showsVerticalScrollIndicator={false}>
+      
         <View>
           <Text style={className`px-5 text-3xl font-semibold`}>
             Recipes {selectedCategory ? `: ${selectedCategory}` : ""}
@@ -175,7 +172,7 @@ const Home: React.FC = () => {
             )
           )}
         </View>
-      </ScrollView>
+      
     </View>
   );
 };

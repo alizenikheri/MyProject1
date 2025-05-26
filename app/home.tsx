@@ -1,9 +1,11 @@
+// Home.tsx (Updated with improved logout functionality)
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, Alert } from "react-native";
 import className from "twrnc";
 import axios from "axios";
 import { useRouter } from "expo-router";
-
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase"; // Adjust the import path as necessary
 import Header from "./components/Header";
 import WelcomeSection from "./components/WelcomeSection";
 import CategoryList from "./components/CategoryList";
@@ -78,18 +80,43 @@ const Home: React.FC = () => {
     setShowRecipeDetail(true);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     Alert.alert(
       "Logout",
       "Are you sure you want to logout?",
       [
         { text: "Cancel", style: "cancel" },
-        { 
-          text: "Logout", 
+        {
+          text: "Logout",
           style: "destructive",
-          onPress: () => {
-            // Add your logout logic here
-            router.replace("/");
+          onPress: async () => {
+            try {
+              // Show loading state (optional)
+              // console.log("Logging out...");
+              
+              // Sign out from Firebase
+              await signOut(auth);
+              
+              // Clear local state
+              setSelectedCategory("Beef");
+              setRecipes([]);
+              setSelectedRecipe(null);
+              setShowRecipeDetail(false);
+              setCategories([]);
+              
+              // console.log("Logout successful, navigating to sign in...");
+              
+              // Navigate to sign in screen
+              router.replace("/(auth)/SignInScreen");
+              
+            } catch (error) {
+              console.error("Error logging out:", error);
+              Alert.alert(
+                "Logout Error", 
+                "Failed to logout. Please try again.",
+                [{ text: "OK" }]
+              );
+            }
           }
         }
       ]

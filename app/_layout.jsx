@@ -4,13 +4,23 @@ import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { auth } from '../config/firebase';
 import { useRouter, useSegments } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth'; // Add signOut import
 
 export default function Layout() {
   const [user, setUser] = useState(null);
   const [initializing, setInitializing] = useState(true);
   const router = useRouter();
   const segments = useSegments();
+
+  // Add logout function
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.replace('/(auth)/SignInScreen');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -28,9 +38,9 @@ export default function Layout() {
       if (user && (inAuthGroup || onWelcomeScreen)) {
         // User is logged in but on auth or welcome screen, redirect to home
         router.replace('/home');
-      } else if (!user && !inAuthGroup && !onWelcomeScreen && segments[0] !== 'home') {
-        // User is not logged in and trying to access protected screens (except home for guest mode)
-        router.replace('/');
+      } else if (!user && !inAuthGroup && !onWelcomeScreen) {
+        // User is not logged in and trying to access protected screens
+        router.replace('/(auth)/SignInScreen');
       }
     }
   }, [user, segments, initializing]);
